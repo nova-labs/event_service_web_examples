@@ -17,6 +17,8 @@
 <!-- navigation bar -->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 
+    <a href="https://www.nova-labs.org"><img src="images/nova-labs_icon_120x120.png" width="40" height="40" id="state_icon_header"></a>
+
     <a class="navbar-brand" href="#" onclick="show_main()">Example Web Site</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -51,12 +53,19 @@
         </p>
 
         <div>
-        <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_lg">
-            unknown
-        </button>
+            <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_lg">
+                unknown
+            </button>
         </div>
-
         <br/>
+
+        <div>
+            <img src="images/nova-labs_icon_120x120.png" id="state_icon">
+            <img src="images/nova-labs_icon_120x120.png" width="60" height="60" id="state_icon_sm">
+            <img src="images/nova-labs_icon_120x120.png" width="30" height="30" id="state_icon_bug">
+        </div>
+        <br/>
+
         <div>
             <h5>Event JSON</h5>
             <pre id="state_json"></pre>
@@ -71,6 +80,7 @@
 
 <!-- developer versions -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
@@ -82,15 +92,19 @@
     var url = base_url + "/events/novalabs_space/latest";
 
     function eventToStatus(event) {
-        var status = { "text": "UNKNOWN", "classes": "btn btn-warning", "time": new Date(0)};
+        var status = { "id": 0, "text": "UNKNOWN", "classes": "btn btn-warning", "time": new Date(0), "icon": "images/nova-labs_icon_64x64.png"};
         if (event == null || event === undefined) {
         } else {
             if (event.value == "open") {
+                status.id = 1;
                 status.text = "OPEN";
                 status.classes = "btn btn-success";
+                status.icon = "images/nova-labs_icon_120x120.png";
             } else if (event.value == "closed") {
+                status.id = 0;
                 status.text = "CLOSED";
                 status.classes = "btn btn-danger";
+                status.icon = "images/nova-labs_icon_off_120x120.png";
             }
             status.time = new Date(event.epochMillis);
         }
@@ -108,6 +122,11 @@
             $("#state_text").html(status.text);
             $("#state_button_sm").html(status.text).removeClass().addClass(status.classes);
             $("#state_button_lg").html(status.text + "<br/>" + dateTime).removeClass().addClass(status.classes);
+
+            $("#state_icon").attr("src", status.icon);
+            $("#state_icon_sm").attr("src", status.icon);
+            $("#state_icon_bug").attr("src", status.icon);
+            $("#state_icon_header").attr("src", status.icon);
 
             $("#state_json").html(JSON.stringify(event, null, 4));
         });
