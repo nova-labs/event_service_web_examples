@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example site</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+
+<!-- navigation bar -->
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+
+    <a class="navbar-brand" href="#" onclick="show_main()">Example Web Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+                <div class="dropdown-menu" aria-labelledby="menu">
+                    <a class="dropdown-item" href="#" id="item_1">Item 1</a>
+                    <a class="dropdown-item" href="#" id="item_2">Item 2</a>
+                </div>
+            </li>
+            <li>
+                <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_sm">unknown</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!-- end navigation bar -->
+
+<!-- container -->
+<main role="main" class="container">
+    <div class="starter-template" id="main_content">
+
+        <h1>Example Site</h1>
+        <p class="lead">Example site</p>
+
+        <p>
+            Simple text: <span id="state_text">unknown</span>
+        </p>
+
+        <div>
+        <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_lg">
+            unknown
+        </button>
+        </div>
+
+        <br/>
+        <div>
+            <h5>Event JSON</h5>
+            <pre id="state_json"></pre>
+        </div>
+    </div>
+</main>
+<!-- end container -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<!-- developer versions -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+<script src="./js/jquery.formatDateTime.min.js"></script>
+
+<script type="application/javascript">
+    // var base_url = "http://event.nova-labs.org/event";
+    var base_url = "http://localhost:8080/event";
+    var url = base_url + "/events/novalabs_space/latest";
+
+    function eventToStatus(event) {
+        var status = { "text": "UNKNOWN", "classes": "btn btn-warning", "time": new Date(0)};
+        if (event == null || event === undefined) {
+        } else {
+            if (event.value == "open") {
+                status.text = "OPEN";
+                status.classes = "btn btn-success";
+            } else if (event.value == "closed") {
+                status.text = "CLOSED";
+                status.classes = "btn btn-danger";
+            }
+            status.time = new Date(event.epochMillis);
+        }
+        return status;
+    }
+
+    function formatDate(date) {
+        return $.formatDateTime('D yy-mm-dd gg:ii:ss.uu a', date);
+    }
+
+    $( document ).ready(function() {
+        $.getJSON(url, function( event ) {
+            var status = eventToStatus(event);
+            var dateTime = formatDate(status.time);
+            $("#state_text").html(status.text);
+            $("#state_button_sm").html(status.text).removeClass().addClass(status.classes);
+            $("#state_button_lg").html(status.text + "<br/>" + dateTime).removeClass().addClass(status.classes);
+
+            $("#state_json").html(JSON.stringify(event, null, 4));
+        });
+    });
+</script>
+
+</body>
+</html>
