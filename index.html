@@ -34,7 +34,7 @@
                 </div>
             </li>
             <li>
-                <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_sm">unknown</button>
+                <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_xsm">unknown</button>
             </li>
         </ul>
     </div>
@@ -54,6 +54,9 @@
 
         <div>
             <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_lg">
+                unknown
+            </button>
+            <button type="button" class="btn" data-toggle="collapse" data-target="#demo" id="state_button_sm">
                 unknown
             </button>
         </div>
@@ -87,8 +90,8 @@
 <script src="./js/jquery.formatDateTime.min.js"></script>
 
 <script type="application/javascript">
-    var base_url = "http://localhost:8080";
-    // var base_url = "http://event.nova-labs.org";
+    //var base_url = "http://localhost:8080";
+    var base_url = "http://event.nova-labs.org";
     var url = base_url + "/events/novalabs_space/latest";
 
     function eventToStatus(event) {
@@ -115,12 +118,18 @@
         return $.formatDateTime('D yy-mm-dd gg:ii:ss.uu a', date);
     }
 
+    function formatShortDate(date) {
+        return $.formatDateTime('M dd hh:ii', date);
+    }
+
     $( document ).ready(function() {
         $.getJSON(url, function( event ) {
             var status = eventToStatus(event);
             var dateTime = formatDate(status.time);
+            var shortDateTime = formatShortDate(status.time);
             $("#state_text").html(status.text);
-            $("#state_button_sm").html(status.text).removeClass().addClass(status.classes);
+            $("#state_button_xsm").html(status.text).removeClass().addClass(status.classes);
+            $("#state_button_sm").html(status.text + "<br/>" + shortDateTime).removeClass().addClass(status.classes);
             $("#state_button_lg").html(status.text + "<br/>" + dateTime).removeClass().addClass(status.classes);
 
             $("#state_icon").attr("src", status.icon);
