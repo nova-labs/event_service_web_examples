@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head><title></title></head>
+<link rel="stylesheet" href="https://www.nova-labs.org/css/bootstrap.css">
+<body>
+
+
+<button type="button" class="btn state-button"> unknown </button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script type="application/javascript">
+    // see https://github.com/nova-labs/event_service_web_examples for more possibilities
+    var url= "http://event.nova-labs.org/events/novalabs_space/latest";
+
+    function eventToStatus(event) {
+        if (event) {
+            if ('open' == event.value) {
+                return {text: "OPEN", classes: "btn btn-success state-button", time: new Date(event.epochMillis)};
+            } else if ('closed' == event.value) {
+                return {text: "CLOSED", classes: "btn btn-danger state-button", time: new Date(event.epochMillis)};
+            }
+        }
+        return {text: "UNKNOWN", classes: "btn btn-warning state-button", time: new Date(0)};
+    }
+
+   function shortDateTime(when) {
+       var date= when.toDateString().split(' ');
+       var mon= date[1];
+       var day= date[2];
+       var time= when.toTimeString().split(' ')[0].split(':');
+       var hr= time[0];
+       var mn= time[1];
+       return [mon,day,[hr,mn].join(':')].join(' ');
+   }
+
+    $(function() {
+        $.getJSON(url, function( event ) {
+            var status = eventToStatus(event);
+            $(".state-button").html(status.text + "<br/>" +  shortDateTime(status.time)).removeClass().addClass(status.classes);
+        });
+    });
+</script>
+
+</body>
+</html>
