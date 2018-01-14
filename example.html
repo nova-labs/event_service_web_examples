@@ -831,14 +831,16 @@ Features include:</p>
     var url= "http://event.nova-labs.org/events/novalabs_space/latest";
 
     function eventToStatus(event) {
+        var red= {'background-color': '#da4f49', 'background-image': '-webkit-linear-gradient(top, #ee5f5b, #bd362f)', padding: '4px 10px 4px', 'text-shadow': '0 -1px 0 rgba(0, 0, 0, 0.25)', color: 'white', 'border-radius': '.25rem'};
+        var green= {'background-color': '#5bb75b', 'background-image': '-webkit-linear-gradient(top, #62c462, #51a351)', padding: '4px 10px 4px', 'text-shadow': '0 -1px 0 rgba(0, 0, 0, 0.25)', color: 'white', 'border-radius': '.25rem'};
         if (event) {
             if ('open' == event.value) {
-                return {text: "OPEN", classes: "btn btn-success state-button", time: new Date(event.epochMillis)};
+                return {text: "OPEN", css: green, time: new Date(event.epochMillis)};
             } else if ('closed' == event.value) {
-                return {text: "CLOSED", classes: "btn btn-danger state-button", time: new Date(event.epochMillis)};
+                return {text: "CLOSED", css: red, time: new Date(event.epochMillis)};
             }
         }
-        return {text: "UNKNOWN", classes: "btn btn-warning state-button", time: new Date(0)};
+        return {text: "UNKNOWN", css: red, time: new Date(0)};
     }
 
    function shortDateTime(when) {
@@ -854,7 +856,7 @@ Features include:</p>
     $(function() {
         $.getJSON(url, function( event ) {
             var status = eventToStatus(event);
-            $(".state-button").html(status.text + "<br/>" +  shortDateTime(status.time)).removeClass().addClass(status.classes);
+            $(".state-button").html(status.text + "<br/>" +  shortDateTime(status.time)).css(status.css);
         });
     });
 </script>
