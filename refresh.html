@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head><title></title></head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<body>
+
+<button type="button" class="btn state-button"> unknown </button>
+
+<script type="application/javascript">
+    // see https://github.com/nova-labs/event_service_web_examples for more possibilities
+    var doorStatusUrl= "http://event.nova-labs.org/events/novalabs_space/latest";
+    var doorUpdateDelay= 300000; // milliseconds
+    var doorStatusLimit= new Date().getTime()+doorUpdateDelay;
+    var doorStatusScheduled= 0;
+
+    function eventToStatus(event) {
+        var red= {'background-color': '#da4f49', 'background-image': '-webkit-linear-gradient(top, #ee5f5b, #bd362f)', padding: '4px 10px 4px', 'text-shadow': '0 -1px 0 rgba(0, 0, 0, 0.25)', color: 'white', 'border-radius': '.25rem'};
+        var green= {'background-color': '#5bb75b', 'background-image': '-webkit-linear-gradient(top, #62c462, #51a351)', padding: '4px 10px 4px', 'text-shadow': '0 -1px 0 rgba(0, 0, 0, 0.25)', color: 'white', 'border-radius': '.25rem'};
+        if (event) {
+            if ('open' == event.value) {
+                return {text: "OPEN", css: green, time: new Date(event.epochMillis)};
+            } else if ('closed' == event.value) {
+                return {text: "CLOSED", css: red, time: new Date(event.epochMillis)};
+            }
+        }
+        return {text: "UNKNOWN", css: red, time: new Date(0)};
+    }
+
+   function shortDateTime(when) {
+       var date= when.toDateString().split(' ');
+       var mon= date[1];
+       var day= date[2];
+       var time= when.toTimeString().split(' ')[0].split(':');
+       var hr= time[0];
+       var mn= time[1];
+       return [mon,day,[hr,mn].join(':')].join(' ');
+   }
+
+    function showDoorStatus() {
+        $.getJSON(doorStatusUrl, function( event ) {
+            var status = eventToStatus(event);
+            $(".state-button").html(status.text + "<br/>" +  shortDateTime(status.time)).css(status.css);
+        });
+    }
+
+    function doorStatusTimeout() {
+        showDoorStatus();
+        if (doorStatusLimit > new Date().getTime()) {
+            setTimeout(doorStatusTimeout, doorUpdateDelay);      
+            doorStatusScheduled= 1;
+        } else {
+            doorStatusScheduled= 0;
+        }
+    }
+ 
+    function doorUserActive() {
+        if (!doorStatusScheduled) {
+            var wait= doorStatusLimit - new Date().getTime();
+            if (wait <= 0) {
+                showDoorStatus();
+                wait= doorUpdateDelay;
+            }
+            setTimeout(doorStatusTimeout, wait);
+            doorStatusScheduled= 1;
+        }
+        doorStatusLimit= new Date().getTime()+doorUpdateDelay;
+    }
+
+    $(showDoorStatus);
+    $(document).mousemove(doorUserActive);
+</script>
+
+</body>
+</html>
