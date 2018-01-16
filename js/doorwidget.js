@@ -1,19 +1,19 @@
-    var url = "http://event.nova-labs.org/events/novalabs_space/latest";
+    var url = "https://event.nova-labs.org/events/novalabs_space/latest";
 
     function eventToStatus(event) {
-        var status = { "id": 0, "text": "UNKNOWN", "classes": "btn btn-warning", "time": new Date(0), "icon": "http://www.nova-labs.org/images/nova-labs_icon_120x120.png"};
+        var status = { "id": 0, "text": "UNKNOWN", "classes": "btn btn-warning", "time": new Date(0), "icon": "https://www.nova-labs.org/images/nova-labs_icon_120x120.png"};
         if (event == null || event === undefined) {
         } else {
             if (event.value == "open") {
                 status.id = 1;
                 status.text = "OPEN";
                 status.classes = "btn btn-success";
-                status.icon = "http://www.nova-labs.org/images/nova-labs_icon_120x120.png";
+                status.icon = "https://www.nova-labs.org/images/nova-labs_icon_120x120.png";
             } else if (event.value == "closed") {
                 status.id = 0;
                 status.text = "CLOSED";
                 status.classes = "btn btn-danger";
-                status.icon = "http://www.nova-labs.org/images/nova-labs_icon_off_120x120.png";
+                status.icon = "https://www.nova-labs.org/images/nova-labs_icon_off_120x120.png";
             }
             status.time = new Date(event.epochMillis);
         }
