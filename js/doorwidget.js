@@ -21,28 +21,28 @@
     }
 
     function formatDate(date) {
-        return $.formatDateTime('D yy-mm-dd gg:ii:ss.uu a', date);
+        return jQuery.formatDateTime('D yy-mm-dd gg:ii:ss.uu a', date);
     }
 
     function formatShortDate(date) {
-        return $.formatDateTime('M dd hh:ii', date);
+        return jQuery.formatDateTime('M dd hh:ii', date);
     }
 
-    $( document ).ready(function() {
-        $.getJSON(url, function( event ) {
+    jQuery( document ).ready(function() {
+        jQuery.getJSON(url, function( event ) {
             var status = eventToStatus(event);
             var dateTime = formatDate(status.time);
             var shortDateTime = formatShortDate(status.time);
-            $("#state_text").html(status.text);
-            $("#state_button_xsm").html(status.text).removeClass().addClass(status.classes);
-            $("#state_button_sm").html(status.text + "<br/>" + shortDateTime).removeClass().addClass(status.classes);
-            $("#state_button_lg").html(status.text + "<br/>" + dateTime).removeClass().addClass(status.classes);
+            jQuery("#state_text").html(status.text);
+            jQuery("#state_button_xsm").html(status.text).removeClass().addClass(status.classes);
+            jQuery("#state_button_sm").html(status.text + "<br/>" + shortDateTime).removeClass().addClass(status.classes);
+            jQuery("#state_button_lg").html(status.text + "<br/>" + dateTime).removeClass().addClass(status.classes);
 
-            $("#state_icon").attr("src", status.icon);
-            $("#state_icon_sm").attr("src", status.icon);
-            $("#state_icon_bug").attr("src", status.icon);
-            $("#state_icon_header").attr("src", status.icon);
+            jQuery("#state_icon").attr("src", status.icon);
+            jQuery("#state_icon_sm").attr("src", status.icon);
+            jQuery("#state_icon_bug").attr("src", status.icon);
+            jQuery("#state_icon_header").attr("src", status.icon);
 
-            $("#state_json").html(JSON.stringify(event, null, 4));
+            jQuery("#state_json").html(JSON.stringify(event, null, 4));
         });
     });

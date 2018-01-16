@@ -33,10 +33,10 @@
        return [mon,day,[hr,mn].join(':')].join(' ');
    }
 
-    $(function() {
-        $.getJSON(url, function( event ) {
+    jQuery(function() {
+        jQuery.getJSON(url, function( event ) {
             var status = eventToStatus(event);
-            $(".state-button").html(status.text + "<br/>" +  shortDateTime(status.time)).css(status.css);
+            jQuery(".state-button").html(status.text + "<br/>" +  shortDateTime(status.time)).css(status.css);
         });
     });
 </script>
