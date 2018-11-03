@@ -2,8 +2,10 @@
 /**
  * Plugin Name:   Novalabs Opensign
  * Description:   Adds an open close indicator for Nova Labs.
- * Version:       1.0
+ * Version:       1.1.3
  * Author:        John Hoskins
+ * 
+ * Format text is a test of adding formatting changes as without reuploading
  */
 
 class novalabs_Opensign extends WP_Widget {
@@ -21,6 +23,9 @@ class novalabs_Opensign extends WP_Widget {
 
  
   public function widget( $args, $instance ) {
+	  $title = apply_filters( 'widget_title', $instance[ 'title' ] );
+	  $format_text = apply_filters( 'widget_format_text', $instance[ 'format_text' ] );
+	  
 	  $url= "https://event.nova-labs.org/events/novalabs_space/latest";
 
 	  //  Initiate curl
@@ -50,6 +55,10 @@ class novalabs_Opensign extends WP_Widget {
 		  
 		  if ($status_text =='OPEN')
 			  $status_color = 'green';
+		  elseif ($status_text =='ASSOCIATE'){
+			  $status_text =='ASSOCIATES ONLY';
+		      $status_color = '#FFA500';
+		  }
 		  elseif ($status_text =='CLOSED')
 			  $status_color = 'red';
 		  else
@@ -62,8 +71,10 @@ class novalabs_Opensign extends WP_Widget {
 		  
 	  }
 
-      $button ="<button type=\"button\" class=\"btn\" style=\"background-color: " . $status_color . "\">";
-      $button = $button . $status_text . "<br>" . $date_text . "</button>";
+      $button = "<a class=\"button  button_size_2 button_js\" style=\"background-color: " . $status_color . "\">";
+      $button = $button . "<span class=\"button_label\" " . $format_text . ">";
+      $button = $button . $status_text . "<br>" . $date_text . "</span>";
+	  $button = $button  . "</a>";
 
 	  echo $args['before_widget'] . $args['before_title'] . $title . $args['after_title']; 	  
 	  echo $button;
@@ -76,10 +87,13 @@ class novalabs_Opensign extends WP_Widget {
   public function form( $instance ) {
 	  
 	  
-    $title = ! empty( $instance['title'] ) ? $instance['title'] : ''; ?>
+    $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
+	$format_text = ! empty( $instance['format_text'] ) ? $instance['format_text'] : ''; ?>
     <p>
       <label for="<?php echo $this->get_field_id( 'title' ); ?>">Title:</label>
       <input type="text" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo esc_attr( $title ); ?>" />
+	  <label for="<?php echo $this->get_field_id( 'format_text' ); ?>">Extra format text:</label>
+	  <input type="text" id="<?php echo $this->get_field_id( 'format_text' ); ?>" name="<?php echo $this->get_field_name( 'format_text' ); ?>" value="<?php echo esc_attr( $format_text ); ?>" />
     </p><?php
   }
 
@@ -88,6 +102,7 @@ class novalabs_Opensign extends WP_Widget {
   public function update( $new_instance, $old_instance ) {
     $instance = $old_instance;
     $instance[ 'title' ] = strip_tags( $new_instance[ 'title' ] );
+	$instance[ 'format_text' ] = strip_tags( $new_instance[ 'format_text' ] );
     return $instance;
   }
 
