@@ -2,7 +2,7 @@
 /**
  * Plugin Name:   Novalabs Opensign
  * Description:   Adds an open close indicator for Nova Labs.
- * Version:       1.1.3
+ * Version:       1.1.4
  * Author:        John Hoskins
  * 
  * Format text is a test of adding formatting changes as without reuploading
@@ -34,10 +34,14 @@ class novalabs_Opensign extends WP_Widget {
 	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	  // Will return the response, if false it print the response
 	  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	  // fail on error 
+	  curl_setopt($ch,CURLOPT_FAILONERROR,true);
 	  // Set the url
 	  curl_setopt($ch, CURLOPT_URL,$url);
 	  // Execute
 	  $result=curl_exec($ch);
+	  // save error info
+	  $curl_errors = curl_error($ch);
 	  // Closing
 	  curl_close($ch);
 
@@ -66,7 +70,9 @@ class novalabs_Opensign extends WP_Widget {
 		  
 	  }else{
 		  $status_text = 'ERROR';
-		  $date_text = '';
+		  $date_text = '';  
+		  // use this for debugging  
+		  //$date_text = $curl_errors;
 		  $status_color = 'red';
 		  
 	  }
